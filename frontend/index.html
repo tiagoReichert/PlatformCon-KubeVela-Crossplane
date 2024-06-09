@@ -1,0 +1,62 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Web Page</title>
+  </head>
+  <body>
+    <h1>Hello, World!</h1>
+
+    <h4>Register a new Product:</h4>
+    <form name=myForm" id="myForm" method="PUT">
+      <div class="form-group">
+        <label for="ID">ID</label>
+        <input type="text" class="form-control" id="id" placeholder="Enter product ID" name="id">
+      </div>
+      <div class="form-group">
+        <label for="Name">Name</label>
+        <input type="text" class="form-control" id="name" placeholder="Enter product Name" name="name">
+      </div>
+      <div class="form-group">
+        <label for="Price">Price</label>
+        <input type="text" class="form-control" id="price" placeholder="Enter product Price" name="price">
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <h4>Registered Products:</h4>
+    <table id="table1" style="border:1px solid">
+	</table>
+
+    <script type="module">
+      const response = await fetch("/api/items");
+      const items = await response.json();
+      console.log(items);
+
+      let str = "";
+      items.forEach((item, index) => {
+        str = str + "<tr><td style=\"min-width:50px;border:1px solid;text-align:center;  \">" + item.id + "</td><td style=\"min-width:100px;border:1px solid;text-align:center;\">" + item.name + "</td><td style=\"min-width:50px;border:1px solid;text-align:center;\">" + item.price + "</td></tr>";
+      });
+      const obj = document.getElementById("table1");
+      obj.innerHTML = str;
+
+      var form = document.getElementById('myForm');
+      form.onsubmit = function(event){
+        var xhr = new XMLHttpRequest();
+        var formData = new FormData(form);
+        //open the request
+        xhr.open('PUT','/api/item')
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        //send the form data
+        xhr.send(JSON.stringify(Object.fromEntries(formData)));
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                form.reset(); //reset form after AJAX success or do something else
+            }
+        }
+    }
+    </script>
+  </body>
+</html>

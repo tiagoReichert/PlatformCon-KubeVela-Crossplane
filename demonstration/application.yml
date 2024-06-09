@@ -1,0 +1,25 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: my-app
+  namespace: my-app-ns
+spec:
+  components:
+    - name: my-app
+      type: three-tier-app
+      properties:
+        frontend_image: {FRONTEND_CONTAINER_IMAGE}
+        frontend_port: 80
+        backend_image: {BACKEND_CONTAINER_IMAGE}
+        backend_port: 8080
+      traits:
+        - type: ddb-table
+          properties:
+            region: us-west-2
+            hashKey: "id"
+            attribute: [
+      				{
+      					name: "id",
+      					type: "S"
+      				}
+      			]
